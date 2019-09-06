@@ -1,4 +1,4 @@
-# CS Transition
+# CSS Transition
 
 [CSS-TRICKS transition](https://css-tricks.com/almanac/properties/t/transition/)
 
