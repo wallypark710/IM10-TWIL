@@ -2,7 +2,7 @@
 
 [CSS-TRICKS transition](https://css-tricks.com/almanac/properties/t/transition/)
 
-더 이상 basic한 애니메이션 고민하지 마세요. Transition 있습니다.
+"아주 쉽습니다."
 
 The `transition` property is a shorthand property used to represent up to four transition-related longhand properties:
 
