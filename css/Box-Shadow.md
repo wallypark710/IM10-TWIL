@@ -7,10 +7,10 @@
 > `box-shadow:` [none || `h-offset`] [`v-offset`] [`blur`] [`spread`] [`color`] [ `inset | initial | inherit`];
 
 `h-offset`: 수평 오른쪽으로 아님 왼쪽으로 얼마나 offset을 주고 싶은지 `px` 값 입력. 
+- `px` 값에 따라 왼쪽 < 0 `px` < 오른쪽 offset 적용됨. 
 
 `v-offset`: 수직 아래로 아님 위로 얼마나 offset을 주고 싶은지 `px` 값 입력.
-
-- `px` 값에 따라 왼쪽 < 0 `px` < 오른쪽 offset 적용됨. 
+- `px` 값에 따라 위 < 0 `px` < 아래 offset 적용됨. 
 
 `blur`: 얼마나 흐리게 하고 싶은지 `px` 값 입력
 
