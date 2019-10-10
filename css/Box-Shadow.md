@@ -26,8 +26,8 @@
 
 ## Top shadow만 없애고 싶을 때
 > `box-shadow`: `0 3px 4px grey`;
-**Case:** 
 
+**Case:** 
 header bar 컴포넌트에 메뉴 버튼이 있는데 누르면 메뉴 컴포넌트가 뜬다. 
 하지만 메뉴 컴포넌트는 header bar 안에 들어가 있지 않고 밖에 있어서 메뉴 컴포넌트에다 box-shadow를 적용해보니깐 header-bar 위 box-shadow가 덮치고 있었다. `v-offset`으로 top border box-shadow를 없앨 수 있어다. 
 참고로 메뉴 컴포넌트는 viewport를 채우고 있었는데 만약에 height viewport가 100% 아니라면 밑쪽 외곽선에 box-shadow가 더 보인다.  
