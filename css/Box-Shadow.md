@@ -25,7 +25,9 @@
 
 
 `inset`: 보통 `<div>` 태그가 넓이 높이가 있는데 inset으로 하면 안쪽 외곽선 쪽에서 그림자가 뜬다
+
 `initial`: default 값이다. 안 넣어도 된다. 
+
 `inherit`: 부모 element의 property를 이어 받는다. 
 
 ---
