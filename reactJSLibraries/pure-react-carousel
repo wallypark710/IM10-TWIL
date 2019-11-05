@@ -1,0 +1,237 @@
+Pure React Carousel이란 각종 이미지들을 사진 한장 단위로 보여주는 carousel을 구현하게 도와주는 라이브러리 입니다.
+
+https://github.com/express-labs/pure-react-carousel#readme
+
+```
+import React from 'react';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+
+export default class extends React.Component {
+  render() {
+    return (
+      <CarouselProvider
+        naturalSlideWidth={100}
+        naturalSlideHeight={125}
+        totalSlides={3}
+      >
+        <Slider>
+          <Slide index={0}>I am the first Slide.</Slide>
+          <Slide index={1}>I am the second Slide.</Slide>
+          <Slide index={2}>I am the third Slide.</Slide>
+        </Slider>
+      </CarouselProvider>
+    );
+  }
+}
+
+```
+
+CarouselProvider라는 컴포넌트를 slider와 slide라는 자식 컴포넌트에 래핑해서 사용할 수 있으며,
+
+해당 이미지는 라이브러리에 store에서 관리되고 있어 추가적인 액션을 필요로 할 경우 withStore라는 HOC 컴포넌트로 감싸 export하여 쉽게 액션을 설정해 줄 수 있습니다.
+
+```
+export default WithStore(YourComponentHere, state => ({
+    // these are read only properties.  we use the "deepFreeze"
+    // npm package to make these properties immutable. You don't have to use
+    // all of these, just pick the ones you need.
+    currentSlide: state.currentSlide,
+    disableAnimation: state.disableAnimation,
+    hasMasterSpinner: state.hasMasterSpinner,
+    imageErrorCount: state.imageErrorCount,
+    imageSuccessCount: state.imageSuccessCount,
+    lockOnWindowScroll: state.lockOnWindowScroll,
+    masterSpinnerThreshold: state.masterSpinnerThreshold,
+    naturalSlideHeight: state.naturalSlideHeight,
+    naturalSlideWidth: state.naturalSlideWidth,
+    orientation: state.orientation,
+    slideSize: state.slideSize,
+    slideTraySize: state.slideTraySize,
+    step: state.step,
+    dragStep: state.dragStep,
+    totalSlides: state.totalSlides,
+    touchEnabled: state.touchEnabled,
+    dragEnabled: state.dragEnabled,
+    visibleSlides: state.visibleSlides,
+  }));
+```
+
+코드샘플은 이렇습니다.
+
+```
+import React, { Component, } from 'react';
+import {
+  Grid,
+  Dialog,
+  DialogContent
+} from '@material-ui/core';
+
+import { parseImgSrc } from '../utils/stringutils';
+
+import 'pure-react-carousel/dist/react-carousel.es.css';
+import { Slider, Slide, CarouselProvider, ButtonBack, ButtonNext, WithStore, Image } from 'pure-react-carousel';
+
+import GoodsCarouselModal from './GoodsCarouselModal';
+import '../basic_detail.css'
+import './goods_detail.css'
+import './goodsinfo.scss'
+
+
+
+class GoodsCarousel extends Component {
+
+  state = {
+    imgIndex: 0,
+    modalOpen: false,
+    modalImg: ''
+  }
+
+  handleClick(idx) {
+    this.props.carouselStore.setStoreState({ currentSlide: idx });
+  }
+
+  goBack = () => {
+    const { mainImgList } = this.props;
+    if (this.props.currentSlide !== 0) {
+      this.props.carouselStore.setStoreState({ currentSlide: this.props.currentSlide - 1 });
+    } else {
+      this.props.carouselStore.setStoreState({ currentSlide: mainImgList.length - 1 });
+    }
+  }
+
+  goNext = () => {
+    const { mainImgList } = this.props;
+    if (this.props.currentSlide < mainImgList.length - 1) {
+      this.props.carouselStore.setStoreState({ currentSlide: this.props.currentSlide + 1 });
+    } else {
+      this.props.carouselStore.setStoreState({ currentSlide: 0 });
+    }
+
+  }
+
+  handleModalClick = (mi) => {
+    this.setState({ modalImg: parseImgSrc(mi), modalOpen: true })
+  }
+
+  modalClose = () => {
+    this.setState({ modalOpen: false })
+  }
+
+  render() {
+    const { mainImgList } = this.props;
+
+    const { modalOpen, } = this.state;
+    return (
+
+      /* 모바일 제품 상단 캐러셀 */
+      <Grid container={true} className={window.browser === 'chrome' ? "goodsCarouselTop" : 'goodsCarouselTopSafari'} >
+        <Grid item className="goodsInfoImgSliderCarousel">
+
+
+          <Slider >
+            {mainImgList.map((mi, idx) => {
+              return (
+                <Slide index={idx} key={idx} innerClassName={'slideTest'}>
+
+                  <img 
+                    onClick={() => this.handleModalClick(mi)}
+                    src={parseImgSrc(mi)}
+                    alt="상품이미지"
+                    style={window.browser === 'explorer' ? {width: 300}: {}}
+                   //className={"mockup-18"}
+                  />
+                </Slide>
+
+              )
+            })
+            }
+
+          </Slider>
+          <div className="btnAppear">
+            <button onClick={this.goBack} className="btnLeft">
+              <p>
+                <img className="btnImg" src="https://1reactphoto.s3.ap-northeast-2.amazonaws.com/imgs/icons/icon_arrowLeft_Wht.svg"></img>
+              </p>
+            </button>
+            <button onClick={this.goNext} className="btnRight">
+              <p>
+                <img className="btnImg" src="https://1reactphoto.s3.ap-northeast-2.amazonaws.com/imgs/icons/icon_arrowRight_Wht.svg"></img>
+              </p>
+            </button>
+          </div>
+          <Grid className="goodsInfoImgSlider">
+            {mainImgList.map((mi, idx) => {
+              return (
+                <Grid className="test" onClick={() => this.handleClick(idx)}>
+                  <img
+                    src={parseImgSrc(mi)}
+                    alt="상품이미지"
+                    className={this.props.currentSlide === idx ? "imgSelected" : "imgNotSelected"}
+                    
+                  />
+                </Grid>
+              )
+            })}
+          </Grid>
+
+
+
+
+        </Grid>
+        <Dialog className="modalTranparent" open={modalOpen} onClose={this.modalClose} fullScreen={true} fullWidth={true} style={{ backgroundColor: 'transparent' }}>
+          <DialogContent classes={{ root: "modalBody" }} >
+            <Grid container >
+              <CarouselProvider
+                className="modalTranparent"
+                naturalSlideWidth={400}
+                naturalSlideHeight={400}
+                totalSlides={mainImgList.length}
+                visibleSlides={1}
+                currentSlide={this.props.currentSlide}
+              >
+                <GoodsCarouselModal mainImgList={mainImgList} modalClose={this.modalClose} />
+              </CarouselProvider>
+            </Grid>
+          </DialogContent>
+        </Dialog>
+      </Grid>
+      /* 모바일 제품 상단 캐러셀 */
+
+
+    );
+  }
+}
+
+
+
+
+
+
+
+export default WithStore(GoodsCarousel, state => ({
+  // these are read only properties.  we use the "deepFreeze"
+  // npm package to make these properties immutable. You don't have to use
+  // all of these, just pick the ones you need.
+  currentSlide: state.currentSlide,
+  disableAnimation: state.disableAnimation,
+  hasMasterSpinner: state.hasMasterSpinner,
+  imageErrorCount: state.imageErrorCount,
+  imageSuccessCount: state.imageSuccessCount,
+  lockOnWindowScroll: state.lockOnWindowScroll,
+  masterSpinnerThreshold: state.masterSpinnerThreshold,
+  naturalSlideHeight: state.naturalSlideHeight,
+  naturalSlideWidth: state.naturalSlideWidth,
+  orientation: state.orientation,
+  slideSize: state.slideSize,
+  slideTraySize: state.slideTraySize,
+  step: state.step,
+  dragStep: state.dragStep,
+  totalSlides: state.totalSlides,
+  touchEnabled: state.touchEnabled,
+  dragEnabled: state.dragEnabled,
+  visibleSlides: state.visibleSlides,
+}));
+```
+
+결과물은 https://m.crunchprice.com 의 상품상세 페이지에서 확인할 수 있습니다.
